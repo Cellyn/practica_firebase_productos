@@ -1,10 +1,10 @@
-import './App.css'
-import Menu from './rutas/Menu'
+//import './App.css'
+import Rutas from './rutas/Rutas'
 
 function App() {
   return (
     <>
-      <Menu />
+      <Rutas />
     </>
   )
 }

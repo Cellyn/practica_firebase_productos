@@ -1,8 +1,10 @@
 import { collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
-import db from '../firebase/appConfig'
+import { db } from '../firebase/appConfig'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
+import Header from './Header'
+import Login from '../session/Login'
 
 export default function ListProducts() {
     //declaramos un estado para la lista de productos
@@ -19,15 +21,15 @@ export default function ListProducts() {
                 //console.log(snapshot);
                 //testeando el primer documento de la coleccion
                 console.log(snapshot.docs[0].data());
-                
+
                 /** mapeando / iterando los documentos de la coleccion */
                 const array_products = snapshot.docs.map((doc) => {
                     //copiamos la data de cada documento de la coleccion productos y la mandamos al array_products
-                    return {...doc.data(), id: doc.id}
+                    return { ...doc.data(), id: doc.id }
                 })
                 //testear 
                 console.log(array_products);
-                
+
                 //actualizamos el estado con el arreglo de productos
                 setProducts(array_products)
             }
@@ -37,7 +39,7 @@ export default function ListProducts() {
     //funcion para eliminar un producto
     const deleteProduct = (id) => {
         console.log(id);
-        try{
+        try {
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
@@ -46,7 +48,7 @@ export default function ListProducts() {
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Yes, delete it!"
-              }).then((result) => {
+            }).then((result) => {
                 if (result.isConfirmed) {
                     //eliminar el documento
                     deleteDoc(doc(db, "products", id));
@@ -57,33 +59,37 @@ export default function ListProducts() {
                     });
                 }
             });
-        }catch(error){
-            console.error("Error al eliminar un producto",error)
+        } catch (error) {
+            console.error("Error al eliminar un producto", error)
         }
-        
+
     }
 
     return (
         <div>
-            <h2>Lista de Productos</h2>
-            <div>
-                {
-                    products.length > 0 ?
-                        products.map((product) => {
-                            return (
-                                <div key={product.id}>
-                                    <div>
-                                        <h3>{product.name}</h3>
-                                        <p>{product.description}</p>
-                                        <Link to={`/editar/${product.id}`}>Editar</Link>
-                                        <button onClick={() => deleteProduct(product.id)}>Eliminar</button>
+            <Header />
+            <section>
+                <h2>Lista de Productos</h2>
+                <div>
+                    {
+                        products.length > 0 ?
+                            products.map((product) => {
+                                return (
+                                    <div key={product.id}>
+                                        <div>
+                                            <h3>{product.name}</h3>
+                                            <p>{product.description}</p>
+                                            <Link to={`/editar/${product.id}`}>Editar</Link>
+                                            <button onClick={() => deleteProduct(product.id)}>Eliminar</button>
+                                        </div>
                                     </div>
-                                </div>
-                            )
-                        })
-                    : <p>No hay productos por el momento</p>
-                }
-            </div>
+                                )
+                            })
+                            : <p>No hay productos por el momento</p>
+                    }
+                </div>
+            </section>
+
         </div>
     )
 }

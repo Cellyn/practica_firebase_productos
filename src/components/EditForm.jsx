@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import db from '../firebase/appConfig'
+import { db } from '../firebase/appConfig'
 import { useForm } from 'react-hook-form'
+import Header from './Header'
+import Login from '../session/Login'
 
 export default function EditForm() {
-    const { register, handleSubmit, setValue, formState: {errors} } = useForm()
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm()
 
     //useParams captura los parametros que mandamos en las rutas
     const { id } = useParams();
@@ -14,29 +16,29 @@ export default function EditForm() {
 
     //montando el producto seleccionado
     useEffect(() => {
-        
+
         const getProductById = async () => {
             const productDoc = await getDoc(doc(db, "products", id));
             console.log(productDoc);
 
             //validamos si el documento existe
-            if(productDoc.exists()){
+            if (productDoc.exists()) {
                 const productData = productDoc.data()
                 console.log(productData);
-                
+
                 //mandar la informacion del producto al formulario
                 setValue('name', productData.name)
                 setValue('description', productData.description)
-            }else{
+            } else {
                 console.log("No existe el producto");
             }
         }
 
         getProductById()
     }, [])
-    
+
     const editProduct = async (data) => {
-        try{
+        try {
             //actualizamos el producto, seleccionamos el documento por su id
             updateDoc(doc(db, "products", id), {
                 name: data.name,
@@ -44,28 +46,37 @@ export default function EditForm() {
             });
             //redireccionamos a la lista de productos
             navigate("/productos")
-        }catch(error){
+        } catch (error) {
             console.error('Error al actualizar el producto', error)
         }
     }
 
     return (
         <div>
-            <h2>Editar Producto</h2>
-            <form action="" onSubmit={handleSubmit(editProduct)}>
-                <div>
-                    <label htmlFor="">Ingresar Producto</label>
-                    <input type="text" {...register('name')} />
-                </div>
+            {user ?
+                <>
+                    <Header />
+                    <section>
+                        <h2>Editar Producto</h2>
+                        <form action="" onSubmit={handleSubmit(editProduct)}>
+                            <div>
+                                <label htmlFor="">Ingresar Producto</label>
+                                <input type="text" {...register('name')} />
+                            </div>
 
-                <div>
-                    <label htmlFor="">Descripcion</label>
-                    <input type="text" {...register('description')}/>
-                </div>
-                <div>
-                    <button type='submit'>Guardar Producto</button>
-                </div>
-            </form>
+                            <div>
+                                <label htmlFor="">Descripcion</label>
+                                <input type="text" {...register('description')} />
+                            </div>
+                            <div>
+                                <button type='submit'>Guardar Producto</button>
+                            </div>
+                        </form>
+                    </section>
+
+                </>
+                : <Login />
+            }
         </div>
     )
 }

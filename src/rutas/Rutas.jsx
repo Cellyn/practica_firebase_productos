@@ -4,6 +4,8 @@ import Home from '../components/Home'
 import ListProducts from '../components/ListProducts'
 import RegisterProduct from '../components/RegisterProduct'
 import EditForm from '../components/EditForm'
+import SignUp from '../session/SignUp'
+import Login from '../session/Login'
 
 export default function Menu() {
     /**
@@ -13,34 +15,19 @@ export default function Menu() {
      */
     return (
         <BrowserRouter>
-            <header>
-                <nav>
-                    <ul>
-                        <li>
-                            <Link to="/">Home</Link>
-                        </li>
-                        <li>
-                            <Link to="/productos">Productos</Link>
-                        </li>
-                        <li>
-                            <Link to="/registro">Registro</Link>
-                        </li>
-                    </ul>
-                </nav>
-            </header>
-
             <Routes>
                 {/**
                  * asignamos el nombre de la ruta y su componente
                  */}
-                <Route path='/' element={<Home />}/>
-                <Route path='/productos' element={<ListProducts />}/>
-                <Route path='/registro' element={<RegisterProduct />}/>
-                <Route path='/prueba' element={<RegisterProduct />}/>
+                <Route path='/' element={<Home />} />
+                <Route path='/productos' element={<ListProducts />} />
+                <Route path='/registro' element={<RegisterProduct />} />
+                <Route path='/login' element={<Login />} />
+                <Route path='/registrar_usuario' element={<SignUp />} />
                 {/** creando una ruta con parametro */}
                 <Route path='/editar/:id' element={<EditForm />} />
             </Routes>
         </BrowserRouter>
-        
+
     )
 }
