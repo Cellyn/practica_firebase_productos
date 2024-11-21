@@ -1,8 +1,16 @@
-# React + Vite
+# Práctica CRUD Productos con Firebase
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Está es una práctica a modo de ejemplo hecha con React Js y conexión con Firebase para guardar, mostrar, editar y eliminar productos en general, por ejemplo productos tecnólogicos como laptos, impresoras, etc o cualquier tipo de producto que deseemos guardar no hay restricción ni categorías definidas.
 
-Currently, two official plugins are available:
+También cuenta con un login en el cuál se debe registrar para podrá acceder a las demás funcionalidades.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Indicaciones
+
+Para probar el proyecto y que funcione correctamente se debe clonar el repositorio o descargarlo como un archivo comprimido .zip y luego en la raíz crear un archivo .env con sus credenciales de firebase para que pueda conectarse.
+
+# Deploy on Netlify
+
+- [Firebase-Products](https://firebase-products-celina-guerrero.netlify.app/)
+
+## Bootcamp Full Stack Junior 24a
+## Celina Elizabeth Guerrero Hernández
