@@ -56,30 +56,29 @@ export default function Login() {
     }
 
     return (
-        <div className={styles.container}>
-            <form onSubmit={handleSubmit(loginForm)} className={styles.login_form}>
-                <h1>Inicio de sesion</h1>
+        <main>
+            <form onSubmit={handleSubmit(loginForm)}>
+                <h2>Iniciar Sesión</h2>
                 <div>
-                    <button onClick={loginGoogle}>Ingresar con Google</button>
+                    <button onClick={loginGoogle} className={styles.google_button}>Ingresar con Google</button>
                 </div>
                 <hr />
-                <h2 className={styles.login_title}>Iniciar</h2>
-                <div className={styles.form_group}>
+                <div className='form_group'>
                     <label htmlFor="email">Correo Electrónico</label>
                     <input type="email" placeholder="Ingrese el correo electrónico" {...register('email', { required: true })} />
-                    {errors.email && <span style={{ color: "red" }}>*Campo Obligatorio</span>}
+                    {errors.email && <span>*Campo Obligatorio</span>}
                 </div>
-                <div className={styles.form_group}>
+                <div className='form_group'>
                     <label htmlFor="password">Contraseña</label>
-                    <input type="password" id="password" placeholder="Ingrese la constraseña" {...register('password', { required: true })} />
-                    {errors.password && <span style={{ color: "red" }}>*Campo Obligatorio</span>}
+                    <input type="password" id="password" placeholder="Ingrese la contraseña" {...register('password', { required: true })} />
+                    {errors.password && <span>*Campo Obligatorio</span>}
                 </div>
-                <button type="submit" className={styles.login_button}>Iniciar Sesión</button>
+                <button type="submit" className='button'>Iniciar Sesión</button>
                 <section>
                     <p>Si no tienes cuenta <Link to="/registrar_usuario">Regístrate Aquí!</Link></p>
                 </section>
             </form>
 
-        </div>
+        </main>
     )
 }

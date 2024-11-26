@@ -9,8 +9,8 @@ import { useNavigate } from 'react-router-dom';
 //creando un esquema (reglas) para validar el correo y password
 const schema = yup.object().shape({
   //asignamos las reglas que se van a validar
-  email: yup.string().required("El correo es obligatorio").email("Correo Invalido, ejemplo: usuario@dominio.com"),
-  password: yup.string().required("Campo Obligatorio").min(8, "La contraseña debe contener al menos 8 caracteres"),
+  email: yup.string().required("El correo es obligatorio").email("Correo Inválido, ejemplo: usuario@dominio.com"),
+  password: yup.string().required("La contraseña es Obligatoria").min(8, "La contraseña debe contener al menos 8 carácteres"),
   //validamos si las contrasenas son igual con la funcion oneOf()
   confirmPassword: yup.string().oneOf([yup.ref('password'), null], "Las contraseñas no son iguales")
 })
@@ -39,18 +39,18 @@ export default function SignUp() {
   }
 
   return (
-    <div>
-      <h1>Registrar Usuario</h1>
+    <main>
       <form onSubmit={handleSubmit(registerForm)}>
-        <div>
-          <label htmlFor="">Correo Electronico</label>
+        <h2>Registrar Usuario</h2>
+        <div className='form_group'>
+          <label htmlFor="">Correo Electrónico</label>
           <input type="email" placeholder='Ingrese su correo' {...register('email', { required: true })} />
           <span style={{ color: "red" }}>
             {errors.email && errors.email.message}
           </span>
         </div>
 
-        <div>
+        <div className='form_group'>
           <label htmlFor="">Contraseña</label>
           <input type="password" placeholder='Ingrese su contraseña' {...register('password', { required: true })} />
           <span style={{ color: "red" }}>
@@ -58,15 +58,15 @@ export default function SignUp() {
           </span>
         </div>
 
-        <div>
+        <div className='form_group'>
           <label htmlFor="">Confirmar Contraseña</label>
-          <input type="password" {...register('confirmPassword')} />
+          <input type="password" placeholder='Repita su contraseña' {...register('confirmPassword')} />
           <span style={{ color: "red" }}>
             {errors.confirmPassword && errors.confirmPassword.message}
           </span>
         </div>
-        <button type='submit'>Registrarse</button>
+        <button type='submit' className='button'>Registrarse</button>
       </form>
-    </div>
+    </main>
   )
 }

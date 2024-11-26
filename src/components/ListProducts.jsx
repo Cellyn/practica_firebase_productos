@@ -1,14 +1,31 @@
 import { collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
-import { db } from '../firebase/appConfig'
+import { auth_user, db } from '../firebase/appConfig'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import Header from './Header'
 import Login from '../session/Login'
+import { onAuthStateChanged } from 'firebase/auth'
+import styles from '../styles/ListProducts.module.css'
 
 export default function ListProducts() {
     //declaramos un estado para la lista de productos
     const [products, setProducts] = useState([])
+
+    //estado donde vamos a verificar si el usuario esta autenticado
+    const [user, setUser] = useState(null)
+
+    //verificamos si el usuario esta en firebase
+    //userFirebase = devuelve un objeto si la persona existe
+    onAuthStateChanged(auth_user, (userFirebase) => {
+        if (userFirebase) { //objeto
+            //si el usuario existe
+            console.log(userFirebase);
+            setUser(userFirebase)
+        } else {
+            setUser(null)
+        }
+    })
 
     //montando la informacion de los productos que hay en firebase
     useEffect(() => {
@@ -41,20 +58,21 @@ export default function ListProducts() {
         console.log(id);
         try {
             Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
+                title: "Estás seguro de eliminar?",
+                text: "No podrás revertir los cambios!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
+                confirmButtonText: "Si, Eliminar!",
+                cancelButtonText: "Cancelar",
             }).then((result) => {
                 if (result.isConfirmed) {
                     //eliminar el documento
                     deleteDoc(doc(db, "products", id));
                     Swal.fire({
-                        title: "Deleted!",
-                        text: "Your file has been deleted.",
+                        title: "Eliminado!",
+                        text: "Has eliminado el producto.",
                         icon: "success"
                     });
                 }
@@ -67,28 +85,33 @@ export default function ListProducts() {
 
     return (
         <div>
-            <Header />
-            <section>
-                <h2>Lista de Productos</h2>
-                <div>
-                    {
-                        products.length > 0 ?
-                            products.map((product) => {
-                                return (
-                                    <div key={product.id}>
-                                        <div>
-                                            <h3>{product.name}</h3>
-                                            <p>{product.description}</p>
-                                            <Link to={`/editar/${product.id}`}>Editar</Link>
-                                            <button onClick={() => deleteProduct(product.id)}>Eliminar</button>
-                                        </div>
-                                    </div>
-                                )
-                            })
-                            : <p>No hay productos por el momento</p>
-                    }
-                </div>
-            </section>
+            {user ?
+                <>
+                    <Header />
+                    <section className={styles.products_section}>
+                        <h2>Lista de Productos</h2>
+                        <div className={styles.products_grid}>
+                            {
+                                products.length > 0 ?
+                                    products.map((product) => {
+                                        return (
+                                            <div key={product.id} className={styles.product_card}>
+                                                <h3>{product.name}</h3>
+                                                <p>{product.description}</p>
+                                                <div className={styles.product_actions}>
+                                                    <Link to={`/editar/${product.id}`} className={styles.edit_product}>Editar</Link>
+                                                    <button onClick={() => deleteProduct(product.id)} className={styles.delete_button}>Eliminar</button>
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                                    : <p className={styles.products_message}>No hay productos por el momento</p>
+                            }
+                        </div>
+                    </section>
+                </>
+                : <Login />
+            }
 
         </div>
     )

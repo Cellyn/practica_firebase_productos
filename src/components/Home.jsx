@@ -5,13 +5,14 @@ import Login from '../session/Login'
 import { signOut } from 'firebase/auth'
 import Swal from 'sweetalert2'
 import Header from './Header'
+import styles from '../styles/Home.module.css'
 
 export default function Home() {
     //estado donde vamos a verificar si el usuario esta autenticado
     const [user, setUser] = useState(null)
 
     //accediendo al usuario del localstorage
-    const userStorage = JSON.parse(localStorage.getItem("user_firebase")) //{}
+    //const userStorage = JSON.parse(localStorage.getItem("user_firebase")) //{}
 
     //verificamos si el usuario esta en firebase
     //userFirebase = devuelve un objeto si la persona existe
@@ -34,6 +35,8 @@ export default function Home() {
                 showConfirmButton: false,
                 timer: 1500
             });
+            setUser(null);
+            localStorage.removeItem("user_firebase");
         }).catch((error) => {
             console.error("Error al cerrar sesión", error)
             Swal.fire({
@@ -49,11 +52,13 @@ export default function Home() {
             {user ?
                 <>
                     <Header />
-                    <h1>Bienvenido a la Aplicacón</h1>
-                    <p>Has iniciado sesión</p>
-                    <img src={userStorage.photoURL ? userStorage.photoURL : "https://res.cloudinary.com/dmddi5ncx/image/upload/v1729199012/practicas/usuario_tpluzt.png"} alt="" style={{ width: "25%" }} />
-                    <p>Correo: {userStorage.email}</p>
-                    <button onClick={logout}>Cerrar Sesión</button>
+                    <section className={styles.home_section}>
+                        <h1 className={styles.welcome_section}>Bienvenido a la Aplicación</h1>
+                        <p className={styles.login_message}>Has iniciado sesión</p>
+                        {/* <img src={userStorage.photoURL ? userStorage.photoURL : "https://res.cloudinary.com/dmddi5ncx/image/upload/v1729199012/practicas/usuario_tpluzt.png"} alt="" style={{ width: "25%" }} />  */}
+                        <p className={styles.user_email}>Correo: {user.email}</p>
+                        <button onClick={logout} className={styles.logout_button}>Cerrar Sesión</button>
+                    </section>
                 </>
                 : <Login />
             }

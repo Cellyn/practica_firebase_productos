@@ -1,18 +1,34 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import { db } from '../firebase/appConfig'
+import { auth_user, db } from '../firebase/appConfig'
 import { useForm } from 'react-hook-form'
 import Header from './Header'
 import Login from '../session/Login'
+import { onAuthStateChanged } from 'firebase/auth'
 
 export default function EditForm() {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm()
+
+    //estado donde vamos a verificar si el usuario esta autenticado
+    const [user, setUser] = useState(null)
 
     //useParams captura los parametros que mandamos en las rutas
     const { id } = useParams();
 
     const navigate = useNavigate()
+
+    //verificamos si el usuario esta en firebase
+    //userFirebase = devuelve un objeto si la persona existe
+    onAuthStateChanged(auth_user, (userFirebase) => {
+        if (userFirebase) { //objeto
+            //si el usuario existe
+            console.log(userFirebase);
+            setUser(userFirebase)
+        } else {
+            setUser(null)
+        }
+    })
 
     //montando el producto seleccionado
     useEffect(() => {
@@ -56,23 +72,25 @@ export default function EditForm() {
             {user ?
                 <>
                     <Header />
-                    <section>
-                        <h2>Editar Producto</h2>
+                    <main>
                         <form action="" onSubmit={handleSubmit(editProduct)}>
-                            <div>
+                            <h2>Editar Producto</h2>
+                            <div className='form_group'>
                                 <label htmlFor="">Ingresar Producto</label>
-                                <input type="text" {...register('name')} />
+                                <input type="text" {...register('name', { required: true })} />
+                                {errors.name && <span>*Campo Obligatorio</span>}
                             </div>
 
-                            <div>
+                            <div className='form_group'>
                                 <label htmlFor="">Descripcion</label>
-                                <input type="text" {...register('description')} />
+                                <input type="text" {...register('description', { required: true })} />
+                                {errors.description && <span>*Campo Obligatorio</span>}
                             </div>
                             <div>
-                                <button type='submit'>Guardar Producto</button>
+                                <button type='submit' className='button'>Guardar Producto</button>
                             </div>
                         </form>
-                    </section>
+                    </main>
 
                 </>
                 : <Login />
